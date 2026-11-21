@@ -1,1 +1,1 @@
-{"hosting":{"public":".","ignore":["firebase.json","**/.*","**/node_modules/**","*.log","firebase-debug*"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
+{"hosting":{"public":".","ignore":["firebase.json","**/.*","**/node_modules/**","*.log","firebase-debug*","/*.png","/*.avif","/*.webp","/*.jfif","/*.zip"],"rewrites":[{"source":"**","destination":"/index.html"}]}}

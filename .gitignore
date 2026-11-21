@@ -3,3 +3,8 @@ firebase-debug.log
 *.log
 .DS_Store
 Thumbs.db
+/*.png
+/*.avif
+/*.webp
+/*.jfif
+/*.zip
