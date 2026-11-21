@@ -42,26 +42,17 @@ let current=null, watchedTemp=false;
 function render(){
   document.getElementById('progressFill').style.width=pct()+"%";
   document.getElementById('progressPct').textContent=pct()+"%";
-  document.getElementById('timeStat').textContent = `${state.passed.length*20} / 120 хв пройдено`;
+  document.getElementById('progressText').textContent=`пройдено ${state.passed.length} з ${LESSONS.length}`;
 
   const rl=document.getElementById('roadmapList'); rl.innerHTML="";
   LESSONS.forEach((l,i)=>{
     const d=document.createElement('div');
     const st = state.passed.includes(i)?'done':(isUnlocked(i)?'current':'locked');
     d.className='road-item '+st;
-    d.innerHTML=`<span>${state.passed.includes(i)?'✓':(isUnlocked(i)?'▶':'🔒')} ${l.title}</span><span>${state.passed.includes(i)?'100%':(isUnlocked(i)?'→':'замок')}</span>`;
+    d.innerHTML=`<span class="ri-num">${String(i+1).padStart(2,'0')}</span><span class="ri-main"><b>${l.title}</b><small>${l.dur} • тест • 3 питання</small></span><span class="ri-status">${state.passed.includes(i)?'✓ пройдено':(isUnlocked(i)?'відкрити →':'🔒')}</span>`;
     d.style.cursor=isUnlocked(i)?'pointer':'not-allowed';
     d.onclick=()=>{ if(isUnlocked(i)) openLesson(i); };
     rl.appendChild(d);
-  });
-
-  const ch=document.getElementById('lessonChips'); ch.innerHTML="";
-  LESSONS.forEach((l,i)=>{
-    const c=document.createElement('div');
-    c.className='chip '+(isUnlocked(i)?(i===current?'on':''):'lock');
-    c.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><small>${isUnlocked(i)?'відкрито':'закрито'}</small>`;
-    c.onclick=()=>{ if(isUnlocked(i)) openLesson(i); };
-    ch.appendChild(c);
   });
 
   const pl=document.getElementById('programList'); pl.innerHTML="";
