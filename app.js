@@ -40,11 +40,15 @@ function pct(){ return Math.round(state.passed.length/LESSONS.length*100); }
 let current=null, watchedTemp=false;
 
 function render(){
-  document.getElementById('progressFill').style.width=pct()+"%";
-  document.getElementById('progressPct').textContent=pct()+"%";
-  document.getElementById('progressText').textContent=`пройдено ${state.passed.length} з ${LESSONS.length}`;
+  const pctDone=pct();
+  const set=(id,fn)=>{const e=document.getElementById(id); if(e) fn(e);};
+  set('progressFill',e=>{e.style.width=pctDone+"%";});
+  set('progressPct',e=>{e.textContent=pctDone+"%";});
+  set('progressText',e=>{e.textContent=`пройдено ${state.passed.length} з ${LESSONS.length}`;});
 
-  const rl=document.getElementById('roadmapList'); rl.innerHTML="";
+  const rl=document.getElementById('roadmapList');
+  if(rl){
+  rl.innerHTML="";
   LESSONS.forEach((l,i)=>{
     const d=document.createElement('div');
     const st = state.passed.includes(i)?'done':(isUnlocked(i)?'current':'locked');
@@ -54,19 +58,25 @@ function render(){
     d.onclick=()=>{ if(isUnlocked(i)) openLesson(i); };
     rl.appendChild(d);
   });
+  }
 
-  const pl=document.getElementById('programList'); pl.innerHTML="";
+  const pl=document.getElementById('programList');
+  if(pl){
+  pl.innerHTML="";
   LESSONS.forEach((l,i)=>{
     const c=document.createElement('div');
     c.className='card prog-card '+(isUnlocked(i)?'':'locked');
     c.innerHTML=`<div class="prog-top"><span class="tag ${i%2?'tag-pink':'tag-blue'}">${l.dur}</span><span>${state.passed.includes(i)?'✓ пройдено':(isUnlocked(i)?'● відкрито':'🔒 замок')}</span></div><h3>${l.title}</h3><p class="mono small">${l.desc}</p><button class="btn-black" ${isUnlocked(i)?'':'disabled style="opacity:.4"'}>${isUnlocked(i)?'Відкрити урок →':'Відкрий попередній тест'}</button>`;
-    c.querySelector('button').onclick=()=>{ if(isUnlocked(i)){openLesson(i); document.getElementById('cabinet').scrollIntoView({behavior:'smooth'});} };
+    c.querySelector('button').onclick=()=>{ if(isUnlocked(i)){openLesson(i); const cab=document.getElementById('cabinet'); if(cab) cab.scrollIntoView({behavior:'smooth'});} };
     pl.appendChild(c);
   });
+  }
 
   const cert=document.getElementById('certBlock');
-  if(state.passed.length===LESSONS.length){cert.classList.remove('hidden'); document.getElementById('certDate').textContent=new Date().toLocaleDateString('uk-UA');}
+  if(cert){
+  if(state.passed.length===LESSONS.length){cert.classList.remove('hidden'); set('certDate',e=>{e.textContent=new Date().toLocaleDateString('uk-UA');});}
   else cert.classList.add('hidden');
+  }
 }
 
 function openLesson(i){
